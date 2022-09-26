@@ -1,5 +1,6 @@
 import json
 import argparse
+import os
 
 def get_args():
     parser = argparse.ArgumentParser(
@@ -29,6 +30,10 @@ args = get_args()
 
 numberToShow = args.number
 
+datapath = os.getcwd()
+print(datapath)
+
+
 if int(numberToShow) > 200 :
     numberToShow = 200
 
@@ -42,7 +47,7 @@ i = 0
 
 while True:
     try:
-      with open('C:\\Users\\jimmy\\Desktop\\spotify-data-stats\\Spot\\StreamingHistory' + str(i) + '.json',encoding="utf-8") as js:
+      with open(datapath + '\\data\\StreamingHistory' + str(i) + '.json',encoding="utf-8") as js:
           data = data + json.load(js)
       i = i +1
     except:
