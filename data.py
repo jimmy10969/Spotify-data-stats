@@ -40,8 +40,20 @@ for x in data:
 for x in tracklist:
     tracklist[x]['time'] = float('%.3f'%(tracklist[x]['time']/(1000.0*60*60)))
 
-topSongs = sorted(tracklist.items(),key=lambda item: item[1]['time'], reverse = True)[:20]
+topSongs = sorted(tracklist.items(),key=lambda item: item[1]['time'], reverse = True)[:50]
 
 print(topSongs)
+
+print("-----------------------------------------------------------------------")
+
+topSongsByArtists = {}
+
+for y in topSongs:
+   if y[0][1] not in topSongsByArtists:
+        topSongsByArtists[y[0][1]] =  1
+   else: 
+       topSongsByArtists[y[0][1]] = topSongsByArtists[y[0][1]] + 1
+
+print(topSongsByArtists)
 
 
