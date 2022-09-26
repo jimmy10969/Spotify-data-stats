@@ -1,4 +1,41 @@
 import json
+import argparse
+
+def get_args():
+    parser = argparse.ArgumentParser(
+        description='Arguments for dData')
+
+    parser.add_argument('--number',
+                        required=False,
+                        action='store',
+                        nargs="?", 
+                        const="default",
+                        default="50",
+                        help='number of songs and artist')
+
+    parser.add_argument('--sortBy',
+                        required=False,
+                        action='store',
+                        nargs="?", 
+                        const="default",
+                        default="time",
+                        help='parameter to sort by')
+    
+    args = parser.parse_args()
+
+    return args
+
+args = get_args()
+
+numberToShow = args.number
+
+if int(numberToShow) > 200 :
+    numberToShow = 200
+
+sortBy = args.sortBy
+
+if sortBy != 'time' and sortBy != 'plays' :
+    sortBy = 'time'
 
 data = []    
 i = 0
@@ -15,14 +52,15 @@ artistlist = {}
 
 for x in data: 
     if x['artistName'] not in artistlist:
-        artistlist[x['artistName']] = x['msPlayed']
+        artistlist[x['artistName']] = { 'time': x['msPlayed'], 'plays': 1}
     else: 
-        artistlist[x['artistName']] = artistlist[x['artistName']] + x['msPlayed']
+       artistlist[(x['artistName'])]['time'] = artistlist[(x['artistName'])]['time'] + x['msPlayed']
+       artistlist[(x['artistName'])]['plays'] = artistlist[(x['artistName'])]['plays'] + 1
 
 for x in artistlist:
-    artistlist[x] = float('%.3f'%(artistlist[x]/(1000.0*60*60)))
+    artistlist[x]['time'] = float('%.3f'%(artistlist[x]['time']/(1000.0*60*60)))
 
-topArtists = sorted(artistlist.items(),key=lambda item: item[1], reverse = True)[:20]
+topArtists = sorted(artistlist.items(),key=lambda item: item[1][sortBy], reverse = True)[:int(numberToShow)]
 
 print(topArtists)
 print("-----------------------------------------------------------------------")
@@ -40,7 +78,7 @@ for x in data:
 for x in tracklist:
     tracklist[x]['time'] = float('%.3f'%(tracklist[x]['time']/(1000.0*60*60)))
 
-topSongs = sorted(tracklist.items(),key=lambda item: item[1]['time'], reverse = True)[:50]
+topSongs = sorted(tracklist.items(),key=lambda item: item[1][sortBy], reverse = True)[:int(numberToShow)]
 
 print(topSongs)
 
